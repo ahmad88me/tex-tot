@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Latex to text</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+
+<body>
+    <div class="alert alert-warning" role="alert">
+        Copy a latex paragraph
+    </div>
+    <textarea id="list" rows="10" class="form-control">
+
+</textarea><br>
+    <button type="button" class="btn btn-warning" onclick="pick()">Clean</button>
+    <br><br>
+
+    <p id="output"></p>
+
+    <div>The text output</div>
+    <textarea id="latexout" rows="10" class="form-control">
+
+</textarea><br>
+
+
+
+
+
+    <script>
+        function pick() {
+            var a = document.getElementById('list').value;
+            var t = "";
+            var latex_chars = ["{", "}", "\\", "~", "`", "'", "$", "%"]
+            //            var ignore_chars = ["~", "$"]
+            var i = 0;
+            var verb = "";
+            var par = "";
+            while (i < a.length) {
+                //                if (ignore_chars.includes(a[i])) {
+                //                    // do nothing
+                //                }
+
+
+                if (latex_chars.includes(a[i])) {
+                    if (a[i] == "\\") {
+                        var j = i + 1
+                        while (a[j] != "{") {
+                            j++;
+                        }
+                        verb = a.substring(i + 1, j)
+                        var k = j
+                        while (a[k] != "}") {
+                            k++;
+                        }
+                        par = a.substring(j + 1, k)
+                        switch (verb) {
+                            case "cite":
+                                t += " [1]"
+                                i = k
+                                break;
+                            case "ref":
+                                t += " 1"
+                                i = k
+                                break;
+                            case "textit":
+                                t += par
+                                i = k
+                                break;
+                            case "footnote":
+                                t += "(" + par + ")"
+                                i = k
+                                break;
+                        }
+                    } // "\\"
+                    else if (a[i] == "`") {
+                        if (a[i + 1] == "`") {
+                            var j = i + 1
+                            while (a[j] != "'") {
+                                j++
+                            }
+                            var content = a.substring(i + 2, j)
+                            t += '"' + content + '"'
+                            i = j
+                        }
+                    } else if (a[i] == "'" && a[i - 1] != "'") { // the case of a single double quote
+                        t += a[i]
+                    } else if (a[i] == "%") {
+                        while (a[i] != "\n") {
+                            i++
+                        }
+                    }
+                } //latex characters
+                else {
+                    t += a[i]
+                }
+                i++;
+            }
+            document.getElementById("latexout").value = t;
+        }
+
+    </script>
+</body>
+
+</html>
