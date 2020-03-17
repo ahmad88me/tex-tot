@@ -66,13 +66,14 @@
                                 i = k
                                 break;
                             case "textit":
-                                t += par
+                                t += '"' + par + '"'
                                 i = k
                                 break;
                             case "footnote":
                                 t += "(" + par + ")"
                                 i = k
                                 break;
+
                         }
                     } // "\\"
                     else if (a[i] == "`") {
