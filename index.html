@@ -46,6 +46,11 @@
 
                 if (latex_chars.includes(a[i])) {
                     if (a[i] == "\\") {
+                        if (a[i + 1] == "%") {
+                            t += "%";
+                            i += 2;
+                            continue;
+                        }
                         var j = i + 1
                         while (a[j] != "{") {
                             j++;
@@ -73,7 +78,6 @@
                                 t += "(" + par + ")"
                                 i = k
                                 break;
-
                         }
                     } // "\\"
                     else if (a[i] == "`") {
@@ -89,8 +93,18 @@
                     } else if (a[i] == "'" && a[i - 1] != "'") { // the case of a single double quote
                         t += a[i]
                     } else if (a[i] == "%") {
-                        while (a[i] != "\n") {
+                        while (a[i] != "\n" && i < a.length) {
                             i++
+                        }
+                    } else if (a[i] == "$") {
+                        if (a[i + 1] == "$") {
+                            i += 2
+                            while (a[i] != "$") {
+                                i++;
+                            }
+                            if (a[i + 1] == "$") {
+                                i++;
+                            }
                         }
                     }
                 } //latex characters
